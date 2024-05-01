@@ -1,20 +1,19 @@
-package app_service
+package application
 
 import (
 	"errors"
-	"go-ddd/src/application/dto"
+	"go-ddd/src/application/dtos"
 	"go-ddd/src/domain/models/users"
-	domain_service "go-ddd/src/domain/services"
 )
 
 type UserAppService struct {
 	UserRepository users.IUserRepository
-	UserService    *domain_service.UserService
+	UserService    *users.UserService
 }
 
 func NewUserAppService(
 	userRepository users.IUserRepository,
-	userService *domain_service.UserService,
+	userService *users.UserService,
 ) *UserAppService {
 	return &UserAppService{
 		UserRepository: userRepository,
@@ -35,7 +34,7 @@ func (u *UserAppService) Register(name string) error {
 	return u.UserRepository.Save(user)
 }
 
-func (u *UserAppService) Get(id string) (*dto.UserData, error) {
+func (u *UserAppService) Get(id string) (*dtos.UserData, error) {
 	user, err := u.findUserById(id)
 	if err != nil {
 		if errors.Is(err, &UserNotFoundError{}) {
@@ -45,7 +44,7 @@ func (u *UserAppService) Get(id string) (*dto.UserData, error) {
 		return nil, err
 	}
 
-	return dto.NewUserData(*user), nil
+	return dtos.NewUserData(*user), nil
 }
 
 func (u *UserAppService) Update(id string, name string) error {

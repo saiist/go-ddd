@@ -1,4 +1,4 @@
-package dto
+package dtos
 
 import "go-ddd/src/domain/models/users"
 

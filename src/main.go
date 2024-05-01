@@ -2,8 +2,8 @@ package src
 
 import (
 	"fmt"
-	application_service "go-ddd/src/application/service"
-	domain_service "go-ddd/src/domain/services"
+	"go-ddd/src/application"
+	"go-ddd/src/domain/models/users"
 	repo "go-ddd/src/infrastructure/repositories"
 	"log"
 	"os"
@@ -29,8 +29,8 @@ func CreateUser(name string) error {
 	}
 
 	userRepository := repo.NewUserRepository(db)
-	userService := domain_service.NewUserService(userRepository)
-	userAppService := application_service.NewUserAppService(userRepository, userService)
+	userService := users.NewUserService(userRepository)
+	userAppService := application.NewUserAppService(userRepository, userService)
 
 	err = userAppService.Register(name)
 

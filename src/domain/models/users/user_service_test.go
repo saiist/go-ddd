@@ -1,4 +1,4 @@
-package services
+package users_test
 
 import (
 	"go-ddd/src/domain/models/users"
@@ -20,7 +20,7 @@ func TestUserService_Exists(t *testing.T) {
 	mockRepo.On("FindByName", &user.UserName).Return(nil, nil).Once()
 
 	// Create the service with the mock
-	service := NewUserService(mockRepo)
+	service := users.NewUserService(mockRepo)
 
 	// Call the method and check the result
 	exists, err := service.Exists(*user)
