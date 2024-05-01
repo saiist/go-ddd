@@ -65,6 +65,20 @@ func (u *UserAppService) Update(id string, name string) error {
 	return u.UserRepository.Save(user)
 }
 
+func (u *UserAppService) Delete(id string) error {
+	user, err := u.findUserById(id)
+	if err != nil {
+		if errors.Is(err, &UserNotFoundError{}) {
+			// If the user is not found, we consider the operation successful
+			return nil
+		}
+
+		return err
+	}
+
+	return u.UserRepository.Delete(user)
+}
+
 func (u *UserAppService) findUserById(id string) (*users.User, error) {
 	targetId, err := users.NewUserId(id)
 	if err != nil {

@@ -13,6 +13,16 @@ import (
 	"gorm.io/gorm"
 )
 
+var db *gorm.DB
+
+func init() {
+	var err error
+	db, err = gorm.Open(postgres.Open(getConnectionString()), &gorm.Config{})
+	if err != nil {
+		log.Fatalf("failed to open database connection: %v", err)
+	}
+}
+
 func Main() {
 	err := CreateUser("John smith")
 	if err != nil {
@@ -23,16 +33,12 @@ func Main() {
 }
 
 func CreateUser(name string) error {
-	db, err := gorm.Open(postgres.Open(getConnectionString()), &gorm.Config{})
-	if err != nil {
-		log.Fatalf("failed to open database connection: %v", err)
-	}
 
 	userRepository := repo.NewUserRepository(db)
 	userService := users.NewUserService(userRepository)
 	userAppService := application.NewUserAppService(userRepository, userService)
 
-	err = userAppService.Register(name)
+	err := userAppService.Register(name)
 
 	return err
 }
