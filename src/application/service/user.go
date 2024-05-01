@@ -2,6 +2,7 @@ package app_service
 
 import (
 	"fmt"
+	"go-ddd/src/application/dto"
 	"go-ddd/src/domain/entity"
 	domain_service "go-ddd/src/domain/service"
 	"go-ddd/src/repository"
@@ -43,4 +44,22 @@ func (u *UserAppService) Register(name string) error {
 	}
 
 	return nil
+}
+
+func (u *UserAppService) Get(id string) (*dto.UserData, error) {
+	targetId, err := entity.NewUserId(id)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := u.UserRepository.FindById(targetId)
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		return nil, nil
+	}
+
+	return dto.NewUserData(*user), nil
 }

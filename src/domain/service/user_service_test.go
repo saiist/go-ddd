@@ -17,7 +17,7 @@ func TestUserService_Exists(t *testing.T) {
 	}
 
 	// Set up the expectation
-	mockRepo.On("Find", &user.UserName).Return(nil, nil).Once()
+	mockRepo.On("FindByName", &user.UserName).Return(nil, nil).Once()
 
 	// Create the service with the mock
 	service := NewUserService(mockRepo)

@@ -9,7 +9,8 @@ import (
 )
 
 type IUserRepository interface {
-	Find(name *entity.UserName) (*entity.User, error)
+	FindByName(name *entity.UserName) (*entity.User, error)
+	FindById(id *entity.UserId) (*entity.User, error)
 	Save(user *entity.User) error
 	Delete(user *entity.User) error
 }
@@ -24,9 +25,22 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-func (r *UserRepository) Find(name *entity.UserName) (*entity.User, error) {
+func (r *UserRepository) FindByName(name *entity.UserName) (*entity.User, error) {
 	var model data_model.UserDataModel
 	result := r.db.Where("name = ?", name.Value).First(&model)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, result.Error
+	}
+
+	return model.ToEntity()
+}
+
+func (r *UserRepository) FindById(id *entity.UserId) (*entity.User, error) {
+	var model data_model.UserDataModel
+	result := r.db.Where("id = ?", id.Value).First(&model)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, nil

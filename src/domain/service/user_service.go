@@ -14,7 +14,7 @@ func NewUserService(userRepository repo.IUserRepository) *UserService {
 }
 
 func (u *UserService) Exists(user entity.User) (bool, error) {
-	found, err := u.UserRepository.Find(&user.UserName)
+	found, err := u.UserRepository.FindByName(&user.UserName)
 	if err != nil {
 		return false, err
 	}
