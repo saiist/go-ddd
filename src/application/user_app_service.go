@@ -22,7 +22,7 @@ func NewUserAppService(
 }
 
 func (u *UserAppService) Register(name string) error {
-	user, err := users.NewUser(name)
+	user, err := users.NewUser(users.UserCreateConfig{Name: name})
 	if err != nil {
 		return err
 	}
@@ -53,13 +53,8 @@ func (u *UserAppService) Update(id string, name string) error {
 		return err
 	}
 
-	newName, err := users.NewUserName(name)
-	if err != nil {
-		return err
-	}
-
-	err = user.ChangeName(*newName)
-	if err != nil {
+	conf := users.UserUpdateConfig{Name: &name}
+	if err := user.Update(&conf); err != nil {
 		return err
 	}
 

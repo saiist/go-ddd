@@ -11,7 +11,7 @@ import (
 func TestUserService_Exists(t *testing.T) {
 	mockRepo := mocks.NewIUserRepository(t)
 
-	user, err := users.NewUser("John Doe")
+	user, err := users.NewUser(users.UserCreateConfig{Name: "Test"})
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}

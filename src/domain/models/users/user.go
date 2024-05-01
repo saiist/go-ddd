@@ -1,8 +1,6 @@
 package users
 
 import (
-	"errors"
-
 	"github.com/google/uuid"
 )
 
@@ -11,16 +9,12 @@ type User struct {
 	UserName UserName
 }
 
-type UserId struct {
-	Value string
+type UserCreateConfig struct {
+	Name string
 }
 
-type UserName struct {
-	Value string
-}
-
-func NewUser(name string) (*User, error) {
-	un, err := NewUserName(name)
+func NewUser(conf UserCreateConfig) (*User, error) {
+	un, err := NewUserName(conf.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -33,37 +27,25 @@ func NewUser(name string) (*User, error) {
 	return &User{UserId: *uid, UserName: *un}, nil
 }
 
-func (u *User) Equals(other *User) bool {
-	return u.UserId.Value == other.UserId.Value
+type UserUpdateConfig struct {
+	Name *string
 }
 
-func (u *User) ChangeName(name UserName) error {
-	u.UserName = name
+func (u *User) Update(conf *UserUpdateConfig) error {
+	if conf.Name != nil {
+		name, err := NewUserName(*conf.Name)
+		if err != nil {
+			return err
+		}
+
+		u.UserName = *name
+	}
+
 	return nil
 }
 
-func NewUserId(value string) (*UserId, error) {
-	if value == "" {
-		return nil, errors.New("user id cannot be empty")
-	}
-
-	return &UserId{Value: value}, nil
-}
-
-func NewUserName(value string) (*UserName, error) {
-	if value == "" {
-		return nil, errors.New("user name cannot be empty")
-	}
-
-	if len(value) < 3 {
-		return nil, errors.New("user name should be at least 3 characters long")
-	}
-
-	if len(value) > 20 {
-		return nil, errors.New("user name should not be more than 20 characters long")
-	}
-
-	return &UserName{Value: value}, nil
+func (u *User) Equals(other *User) bool {
+	return u.UserId.Value == other.UserId.Value
 }
 
 type IUserRepository interface {
