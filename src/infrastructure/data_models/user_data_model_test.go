@@ -1,4 +1,4 @@
-package data_model
+package data_models
 
 import (
 	"testing"

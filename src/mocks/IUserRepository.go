@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	entity "go-ddd/src/domain/entity"
+	users "go-ddd/src/domain/models/users"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -14,7 +14,7 @@ type IUserRepository struct {
 }
 
 // Delete provides a mock function with given fields: user
-func (_m *IUserRepository) Delete(user *entity.User) error {
+func (_m *IUserRepository) Delete(user *users.User) error {
 	ret := _m.Called(user)
 
 	if len(ret) == 0 {
@@ -22,7 +22,7 @@ func (_m *IUserRepository) Delete(user *entity.User) error {
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(*entity.User) error); ok {
+	if rf, ok := ret.Get(0).(func(*users.User) error); ok {
 		r0 = rf(user)
 	} else {
 		r0 = ret.Error(0)
@@ -32,27 +32,27 @@ func (_m *IUserRepository) Delete(user *entity.User) error {
 }
 
 // FindById provides a mock function with given fields: id
-func (_m *IUserRepository) FindById(id *entity.UserId) (*entity.User, error) {
+func (_m *IUserRepository) FindById(id *users.UserId) (*users.User, error) {
 	ret := _m.Called(id)
 
 	if len(ret) == 0 {
 		panic("no return value specified for FindById")
 	}
 
-	var r0 *entity.User
+	var r0 *users.User
 	var r1 error
-	if rf, ok := ret.Get(0).(func(*entity.UserId) (*entity.User, error)); ok {
+	if rf, ok := ret.Get(0).(func(*users.UserId) (*users.User, error)); ok {
 		return rf(id)
 	}
-	if rf, ok := ret.Get(0).(func(*entity.UserId) *entity.User); ok {
+	if rf, ok := ret.Get(0).(func(*users.UserId) *users.User); ok {
 		r0 = rf(id)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*entity.User)
+			r0 = ret.Get(0).(*users.User)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(*entity.UserId) error); ok {
+	if rf, ok := ret.Get(1).(func(*users.UserId) error); ok {
 		r1 = rf(id)
 	} else {
 		r1 = ret.Error(1)
@@ -62,27 +62,27 @@ func (_m *IUserRepository) FindById(id *entity.UserId) (*entity.User, error) {
 }
 
 // FindByName provides a mock function with given fields: name
-func (_m *IUserRepository) FindByName(name *entity.UserName) (*entity.User, error) {
+func (_m *IUserRepository) FindByName(name *users.UserName) (*users.User, error) {
 	ret := _m.Called(name)
 
 	if len(ret) == 0 {
 		panic("no return value specified for FindByName")
 	}
 
-	var r0 *entity.User
+	var r0 *users.User
 	var r1 error
-	if rf, ok := ret.Get(0).(func(*entity.UserName) (*entity.User, error)); ok {
+	if rf, ok := ret.Get(0).(func(*users.UserName) (*users.User, error)); ok {
 		return rf(name)
 	}
-	if rf, ok := ret.Get(0).(func(*entity.UserName) *entity.User); ok {
+	if rf, ok := ret.Get(0).(func(*users.UserName) *users.User); ok {
 		r0 = rf(name)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*entity.User)
+			r0 = ret.Get(0).(*users.User)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(*entity.UserName) error); ok {
+	if rf, ok := ret.Get(1).(func(*users.UserName) error); ok {
 		r1 = rf(name)
 	} else {
 		r1 = ret.Error(1)
@@ -92,7 +92,7 @@ func (_m *IUserRepository) FindByName(name *entity.UserName) (*entity.User, erro
 }
 
 // Save provides a mock function with given fields: user
-func (_m *IUserRepository) Save(user *entity.User) error {
+func (_m *IUserRepository) Save(user *users.User) error {
 	ret := _m.Called(user)
 
 	if len(ret) == 0 {
@@ -100,7 +100,7 @@ func (_m *IUserRepository) Save(user *entity.User) error {
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(*entity.User) error); ok {
+	if rf, ok := ret.Get(0).(func(*users.User) error); ok {
 		r0 = rf(user)
 	} else {
 		r0 = ret.Error(0)

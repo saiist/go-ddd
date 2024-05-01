@@ -1,32 +1,25 @@
-package repository
+package repositories
 
 import (
 	"errors"
-	"go-ddd/src/domain/entity"
-	"go-ddd/src/infrastructure/data_model"
+	"go-ddd/src/domain/models/users"
+	"go-ddd/src/infrastructure/data_models"
 
 	"gorm.io/gorm"
 )
-
-type IUserRepository interface {
-	FindByName(name *entity.UserName) (*entity.User, error)
-	FindById(id *entity.UserId) (*entity.User, error)
-	Save(user *entity.User) error
-	Delete(user *entity.User) error
-}
 
 type UserRepository struct {
 	db *gorm.DB
 }
 
-var _ IUserRepository = &UserRepository{}
+var _ users.IUserRepository = &UserRepository{}
 
 func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-func (r *UserRepository) FindByName(name *entity.UserName) (*entity.User, error) {
-	var model data_model.UserDataModel
+func (r *UserRepository) FindByName(name *users.UserName) (*users.User, error) {
+	var model data_models.UserDataModel
 	result := r.db.Where("name = ?", name.Value).First(&model)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -38,8 +31,8 @@ func (r *UserRepository) FindByName(name *entity.UserName) (*entity.User, error)
 	return model.ToEntity()
 }
 
-func (r *UserRepository) FindById(id *entity.UserId) (*entity.User, error) {
-	var model data_model.UserDataModel
+func (r *UserRepository) FindById(id *users.UserId) (*users.User, error) {
+	var model data_models.UserDataModel
 	result := r.db.Where("id = ?", id.Value).First(&model)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -51,8 +44,8 @@ func (r *UserRepository) FindById(id *entity.UserId) (*entity.User, error) {
 	return model.ToEntity()
 }
 
-func (r *UserRepository) Save(user *entity.User) error {
-	model := data_model.UserDataModel{}.ToDataModel(user)
+func (r *UserRepository) Save(user *users.User) error {
+	model := data_models.UserDataModel{}.ToDataModel(user)
 	result := r.db.Save(&model)
 	if result.Error != nil {
 		return result.Error
@@ -61,8 +54,8 @@ func (r *UserRepository) Save(user *entity.User) error {
 	return nil
 }
 
-func (r *UserRepository) Delete(user *entity.User) error {
-	model := data_model.UserDataModel{}.ToDataModel(user)
+func (r *UserRepository) Delete(user *users.User) error {
+	model := data_models.UserDataModel{}.ToDataModel(user)
 	result := r.db.Delete(&model)
 	if result.Error != nil {
 		return result.Error

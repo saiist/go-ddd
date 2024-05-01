@@ -1,4 +1,4 @@
-package entity
+package users
 
 import (
 	"errors"
@@ -64,4 +64,11 @@ func NewUserName(value string) (*UserName, error) {
 	}
 
 	return &UserName{Value: value}, nil
+}
+
+type IUserRepository interface {
+	FindByName(name *UserName) (*User, error)
+	FindById(id *UserId) (*User, error)
+	Save(user *User) error
+	Delete(user *User) error
 }

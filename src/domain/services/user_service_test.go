@@ -1,7 +1,7 @@
-package domain_service
+package services
 
 import (
-	"go-ddd/src/domain/entity"
+	"go-ddd/src/domain/models/users"
 	"go-ddd/src/mocks"
 	"testing"
 
@@ -11,7 +11,7 @@ import (
 func TestUserService_Exists(t *testing.T) {
 	mockRepo := mocks.NewIUserRepository(t)
 
-	user, err := entity.NewUser("John Doe")
+	user, err := users.NewUser("John Doe")
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}

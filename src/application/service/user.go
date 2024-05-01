@@ -1,20 +1,19 @@
 package app_service
 
 import (
-	"fmt"
+	"errors"
 	"go-ddd/src/application/dto"
-	"go-ddd/src/domain/entity"
-	domain_service "go-ddd/src/domain/service"
-	"go-ddd/src/repository"
+	"go-ddd/src/domain/models/users"
+	domain_service "go-ddd/src/domain/services"
 )
 
 type UserAppService struct {
-	UserRepository repository.IUserRepository
+	UserRepository users.IUserRepository
 	UserService    *domain_service.UserService
 }
 
 func NewUserAppService(
-	userRepository repository.IUserRepository,
+	userRepository users.IUserRepository,
 	userService *domain_service.UserService,
 ) *UserAppService {
 	return &UserAppService{
@@ -24,42 +23,77 @@ func NewUserAppService(
 }
 
 func (u *UserAppService) Register(name string) error {
-	user, err := entity.NewUser(name)
+	user, err := users.NewUser(name)
 	if err != nil {
 		return err
 	}
 
-	exists, err := u.UserService.Exists(*user)
-	if err != nil {
+	if err := u.checkUserExists(user); err != nil {
 		return err
 	}
 
-	if exists {
-		return fmt.Errorf("error checking if user exists: %s", name)
-	}
-
-	err = u.UserRepository.Save(user)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return u.UserRepository.Save(user)
 }
 
 func (u *UserAppService) Get(id string) (*dto.UserData, error) {
-	targetId, err := entity.NewUserId(id)
+	user, err := u.findUserById(id)
+	if err != nil {
+		if errors.Is(err, &UserNotFoundError{}) {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return dto.NewUserData(*user), nil
+}
+
+func (u *UserAppService) Update(id string, name string) error {
+	user, err := u.findUserById(id)
+	if err != nil {
+		return err
+	}
+
+	newName, err := users.NewUserName(name)
+	if err != nil {
+		return err
+	}
+
+	err = user.ChangeName(*newName)
+	if err != nil {
+		return err
+	}
+
+	if err := u.checkUserExists(user); err != nil {
+		return err
+	}
+
+	return u.UserRepository.Save(user)
+}
+
+func (u *UserAppService) findUserById(id string) (*users.User, error) {
+	targetId, err := users.NewUserId(id)
 	if err != nil {
 		return nil, err
 	}
 
 	user, err := u.UserRepository.FindById(targetId)
 	if err != nil {
-		return nil, err
+		return nil, &UserNotFoundError{Id: *targetId}
 	}
 
-	if user == nil {
-		return nil, nil
+	return user, nil
+}
+
+func (u *UserAppService) checkUserExists(user *users.User) error {
+	exists, err := u.UserService.Exists(*user)
+	if err != nil {
+		return err
 	}
 
-	return dto.NewUserData(*user), nil
+	if exists {
+		return &UserAlreadyExistsError{User: *user}
+	}
+
+	return nil
 }

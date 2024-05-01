@@ -3,8 +3,8 @@ package src
 import (
 	"fmt"
 	application_service "go-ddd/src/application/service"
-	domain_service "go-ddd/src/domain/service"
-	repo "go-ddd/src/repository"
+	domain_service "go-ddd/src/domain/services"
+	repo "go-ddd/src/infrastructure/repositories"
 	"log"
 	"os"
 
