@@ -31,6 +31,20 @@ func (u *UserGetService) Get(id string) (*dtos.UserData, error) {
 	return dtos.NewUserData(*user), nil
 }
 
+func (u *UserGetService) GetAll() ([]*dtos.UserData, error) {
+	users, err := u.UserRepository.FindAll()
+	if err != nil {
+		return nil, err
+	}
+
+	var result []*dtos.UserData
+	for _, user := range users {
+		result = append(result, dtos.NewUserData(*user))
+	}
+
+	return result, nil
+}
+
 func (u *UserGetService) findUserById(id string) (*users.User, error) {
 	targetId, err := users.NewUserId(id)
 	if err != nil {

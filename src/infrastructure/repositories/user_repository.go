@@ -44,6 +44,26 @@ func (r *UserRepository) FindById(id *users.UserId) (*users.User, error) {
 	return model.ToEntity()
 }
 
+func (r *UserRepository) FindAll() ([]*users.User, error) {
+	var models []data_models.UserDataModel
+	result := r.db.Find(&models)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	var users []*users.User
+	for _, model := range models {
+		user, err := model.ToEntity()
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, user)
+	}
+
+	return users, nil
+}
+
 func (r *UserRepository) Save(user *users.User) error {
 	model := data_models.UserDataModel{}.ToDataModel(user)
 	result := r.db.Save(&model)

@@ -14,6 +14,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var port = ":3110"
+
 func Main() {
 
 	db := startDatabase()
@@ -23,6 +25,7 @@ func Main() {
 	r := gin.Default()
 	users := r.Group("/users")
 	{
+		users.GET("/", userHandler.GetAll)
 		users.GET("/:id", userHandler.Get)
 		users.POST("/", userHandler.Post)
 		users.PUT("/:id", userHandler.Put)
@@ -41,7 +44,7 @@ func startDatabase() *gorm.DB {
 }
 
 func startServer(r *gin.Engine) {
-	err := r.Run(":3110")
+	err := r.Run(port)
 	if err != nil {
 		log.Fatalf("failed to start server: %v", err)
 	}

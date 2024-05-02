@@ -49,6 +49,7 @@ func (u *User) Equals(other *User) bool {
 }
 
 type IUserRepository interface {
+	FindAll() ([]*User, error)
 	FindByName(name *UserName) (*User, error)
 	FindById(id *UserId) (*User, error)
 	Save(user *User) error

@@ -31,6 +31,36 @@ func (_m *IUserRepository) Delete(user *users.User) error {
 	return r0
 }
 
+// FindAll provides a mock function with given fields:
+func (_m *IUserRepository) FindAll() ([]*users.User, error) {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindAll")
+	}
+
+	var r0 []*users.User
+	var r1 error
+	if rf, ok := ret.Get(0).(func() ([]*users.User, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() []*users.User); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*users.User)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // FindById provides a mock function with given fields: id
 func (_m *IUserRepository) FindById(id *users.UserId) (*users.User, error) {
 	ret := _m.Called(id)

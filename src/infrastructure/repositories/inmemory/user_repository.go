@@ -48,6 +48,19 @@ func (r *UserRepository) FindById(id *users.UserId) (*users.User, error) {
 	return &copyUser, nil
 }
 
+func (r *UserRepository) FindAll() ([]*users.User, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	var users []*users.User
+	for _, b := range store {
+		copyUser := *b
+		users = append(users, &copyUser)
+	}
+
+	return users, nil
+}
+
 func (r *UserRepository) Save(user *users.User) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
