@@ -13,11 +13,17 @@ import (
 	"gorm.io/gorm"
 )
 
-// Injectors from wire.go:
+// Injectors from user_wire.go:
 
 func InitializeUserRegisterService(db *gorm.DB) *users.UserRegisterService {
 	iUserRepository := repositories.NewUserRepository(db)
 	userService := users2.NewUserService(iUserRepository)
 	userRegisterService := users.NewUserRegisterService(iUserRepository, userService)
 	return userRegisterService
+}
+
+func InitializeUserDeleteService(db *gorm.DB) *users.UserDeleteService {
+	iUserRepository := repositories.NewUserRepository(db)
+	userDeleteService := users.NewUserDeleteService(iUserRepository)
+	return userDeleteService
 }
