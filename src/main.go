@@ -10,6 +10,8 @@ import (
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"github.com/gin-gonic/gin"
 )
 
 var db *gorm.DB
@@ -23,20 +25,19 @@ func init() {
 }
 
 func Main() {
-	err := CreateUser("John smith")
+
+	userHandler := di.InitializeUserHandler(db)
+
+	r := gin.Default()
+	r.GET("/users/:id", userHandler.Get)
+	r.POST("/users", userHandler.Post)
+	r.PUT("/users/:id", userHandler.Put)
+	r.DELETE("/users/:id", userHandler.Delete)
+
+	err := r.Run(":3110")
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatalf("failed to start server: %v", err)
 	}
-	fmt.Printf("User created")
-}
-
-func CreateUser(name string) error {
-
-	userRegisterService := di.InitializeUserRegisterService(db)
-	err := userRegisterService.Handle(name)
-
-	return err
 }
 
 func getConnectionString() string {

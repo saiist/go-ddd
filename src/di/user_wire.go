@@ -6,6 +6,7 @@ package di
 import (
 	app_service_users "go-ddd/src/application/users"
 	models_users "go-ddd/src/domain/models/users"
+	"go-ddd/src/handler"
 	repo "go-ddd/src/infrastructure/repositories"
 
 	// repo "go-ddd/src/infrastructure/repositories/inmemory"
@@ -14,12 +15,17 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitializeUserRegisterService(db *gorm.DB) *app_service_users.UserRegisterService {
-	wire.Build(repo.NewUserRepository, models_users.NewUserService, app_service_users.NewUserRegisterService)
-	return nil
-}
+var UserSet = wire.NewSet(
+	repo.NewUserRepository,
+	models_users.NewUserService,
+	app_service_users.NewUserGetService,
+	app_service_users.NewUserRegisterService,
+	app_service_users.NewUserUpdateService,
+	app_service_users.NewUserDeleteService,
+	handler.NewUserHandler,
+)
 
-func InitializeUserDeleteService(db *gorm.DB) *app_service_users.UserDeleteService {
-	wire.Build(repo.NewUserRepository, app_service_users.NewUserDeleteService)
+func InitializeUserHandler(db *gorm.DB) *handler.UserHandler {
+	wire.Build(UserSet)
 	return nil
 }

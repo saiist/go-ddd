@@ -7,23 +7,27 @@
 package di
 
 import (
+	"github.com/google/wire"
 	"go-ddd/src/application/users"
 	users2 "go-ddd/src/domain/models/users"
+	"go-ddd/src/handler"
 	"go-ddd/src/infrastructure/repositories"
 	"gorm.io/gorm"
 )
 
 // Injectors from user_wire.go:
 
-func InitializeUserRegisterService(db *gorm.DB) *users.UserRegisterService {
+func InitializeUserHandler(db *gorm.DB) *handler.UserHandler {
 	iUserRepository := repositories.NewUserRepository(db)
+	userGetService := users.NewUserGetService(iUserRepository)
 	userService := users2.NewUserService(iUserRepository)
 	userRegisterService := users.NewUserRegisterService(iUserRepository, userService)
-	return userRegisterService
+	userUpdateService := users.NewUserUpdateService(iUserRepository, userService)
+	userDeleteService := users.NewUserDeleteService(iUserRepository)
+	userHandler := handler.NewUserHandler(userGetService, userRegisterService, userUpdateService, userDeleteService)
+	return userHandler
 }
 
-func InitializeUserDeleteService(db *gorm.DB) *users.UserDeleteService {
-	iUserRepository := repositories.NewUserRepository(db)
-	userDeleteService := users.NewUserDeleteService(iUserRepository)
-	return userDeleteService
-}
+// user_wire.go:
+
+var UserSet = wire.NewSet(repositories.NewUserRepository, users2.NewUserService, users.NewUserGetService, users.NewUserRegisterService, users.NewUserUpdateService, users.NewUserDeleteService, handler.NewUserHandler)

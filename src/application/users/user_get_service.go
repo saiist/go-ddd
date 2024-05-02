@@ -12,7 +12,6 @@ type UserGetService struct {
 
 func NewUserGetService(
 	userRepository users.IUserRepository,
-	userService *users.UserService,
 ) *UserGetService {
 	return &UserGetService{
 		UserRepository: userRepository,
