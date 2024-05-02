@@ -14,7 +14,7 @@ type UserRepository struct {
 
 var _ users.IUserRepository = &UserRepository{}
 
-func NewUserRepository(db *gorm.DB) *UserRepository {
+func NewUserRepository(db *gorm.DB) users.IUserRepository {
 	return &UserRepository{db: db}
 }
 

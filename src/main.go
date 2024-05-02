@@ -2,11 +2,10 @@ package src
 
 import (
 	"fmt"
-	app_service_users "go-ddd/src/application/users"
-	models_users "go-ddd/src/domain/models/users"
-	repo "go-ddd/src/infrastructure/repositories"
 	"log"
 	"os"
+
+	"go-ddd/src/di"
 
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
@@ -34,10 +33,7 @@ func Main() {
 
 func CreateUser(name string) error {
 
-	userRepository := repo.NewUserRepository(db)
-	userService := models_users.NewUserService(userRepository)
-	userRegisterService := app_service_users.NewUserRegisterService(userRepository, userService)
-
+	userRegisterService := di.InitializeUserRegisterService(db)
 	err := userRegisterService.Handle(name)
 
 	return err
