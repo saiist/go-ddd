@@ -3,8 +3,6 @@ package inmemory
 import (
 	"go-ddd/src/domain/models/users"
 	"sync"
-
-	"gorm.io/gorm"
 )
 
 // this is a simple in-memory store for users
@@ -16,7 +14,7 @@ type UserRepository struct {
 
 var _ users.IUserRepository = &UserRepository{}
 
-func NewUserRepository(*gorm.DB) users.IUserRepository {
+func NewUserRepository() users.IUserRepository {
 	return &UserRepository{}
 }
 
