@@ -39,3 +39,6 @@ _cgo_export.*
 # Miscellaneous
 *.swp
 .DS_Store
+
+# ignore github codespaces item
+go-ddd
