@@ -14,26 +14,33 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var db *gorm.DB
-
-func init() {
-	var err error
-	db, err = gorm.Open(postgres.Open(getConnectionString()), &gorm.Config{})
-	if err != nil {
-		log.Fatalf("failed to open database connection: %v", err)
-	}
-}
-
 func Main() {
+
+	db := startDatabase()
 
 	userHandler := di.InitializeUserHandler(db)
 
 	r := gin.Default()
-	r.GET("/users/:id", userHandler.Get)
-	r.POST("/users", userHandler.Post)
-	r.PUT("/users/:id", userHandler.Put)
-	r.DELETE("/users/:id", userHandler.Delete)
+	users := r.Group("/users")
+	{
+		users.GET("/:id", userHandler.Get)
+		users.POST("/", userHandler.Post)
+		users.PUT("/:id", userHandler.Put)
+		users.DELETE("/:id", userHandler.Delete)
+	}
 
+	startServer(r)
+}
+
+func startDatabase() *gorm.DB {
+	db, err := gorm.Open(postgres.Open(getConnectionString()), &gorm.Config{})
+	if err != nil {
+		log.Fatalf("failed to open database connection: %v", err)
+	}
+	return db
+}
+
+func startServer(r *gin.Engine) {
 	err := r.Run(":3110")
 	if err != nil {
 		log.Fatalf("failed to start server: %v", err)
