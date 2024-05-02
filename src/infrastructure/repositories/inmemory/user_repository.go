@@ -5,24 +5,25 @@ import (
 	"sync"
 )
 
-// this is a simple in-memory store for users
+// this is a simple in-memory Store for users
 var store = make(map[string]*users.User)
 
 type UserRepository struct {
-	mu sync.RWMutex
+	Store map[string]*users.User
+	mu    sync.RWMutex
 }
 
 var _ users.IUserRepository = &UserRepository{}
 
 func NewUserRepository() users.IUserRepository {
-	return &UserRepository{}
+	return &UserRepository{Store: store}
 }
 
 func (r *UserRepository) FindByName(name *users.UserName) (*users.User, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
-	for _, b := range store {
+	for _, b := range r.Store {
 		if b.UserName.Value == name.Value {
 			// Create a deep copy of the user
 			copyUser := *b
@@ -37,7 +38,7 @@ func (r *UserRepository) FindById(id *users.UserId) (*users.User, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
-	result, ok := store[id.Value]
+	result, ok := r.Store[id.Value]
 	if !ok {
 		return nil, nil
 	}
@@ -51,7 +52,7 @@ func (r *UserRepository) FindAll() ([]*users.User, error) {
 	defer r.mu.RUnlock()
 
 	var users []*users.User
-	for _, b := range store {
+	for _, b := range r.Store {
 		copyUser := *b
 		users = append(users, &copyUser)
 	}
@@ -64,7 +65,7 @@ func (r *UserRepository) Save(user *users.User) error {
 	defer r.mu.Unlock()
 
 	copyUser := *user
-	store[copyUser.UserId.Value] = &copyUser
+	r.Store[copyUser.UserId.Value] = &copyUser
 	return nil
 }
 
@@ -72,6 +73,6 @@ func (r *UserRepository) Delete(user *users.User) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	delete(store, user.UserId.Value)
+	delete(r.Store, user.UserId.Value)
 	return nil
 }

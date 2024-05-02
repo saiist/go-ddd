@@ -11,23 +11,25 @@ import (
 	"go-ddd/src/application/users"
 	users2 "go-ddd/src/domain/models/users"
 	"go-ddd/src/handler"
+	"go-ddd/src/infrastructure/factory"
 	"go-ddd/src/infrastructure/repositories"
 	"gorm.io/gorm"
 )
 
-// Injectors from user_wire.go:
+// Injectors from wire.go:
 
 func InitializeUserHandler(db *gorm.DB) *handler.UserHandler {
 	iUserRepository := repositories.NewUserRepository(db)
 	userGetService := users.NewUserGetService(iUserRepository)
+	iUserFactory := factory.NewUserFactory()
 	userService := users2.NewUserService(iUserRepository)
-	userRegisterService := users.NewUserRegisterService(iUserRepository, userService)
+	userRegisterService := users.NewUserRegisterService(iUserFactory, iUserRepository, userService)
 	userUpdateService := users.NewUserUpdateService(iUserRepository, userService)
 	userDeleteService := users.NewUserDeleteService(iUserRepository)
 	userHandler := handler.NewUserHandler(userGetService, userRegisterService, userUpdateService, userDeleteService)
 	return userHandler
 }
 
-// user_wire.go:
+// wire.go:
 
-var UserSet = wire.NewSet(repositories.NewUserRepository, users2.NewUserService, users.NewUserGetService, users.NewUserRegisterService, users.NewUserUpdateService, users.NewUserDeleteService, handler.NewUserHandler)
+var UserSet = wire.NewSet(repositories.NewUserRepository, factory.NewUserFactory, users2.NewUserService, users.NewUserGetService, users.NewUserRegisterService, users.NewUserUpdateService, users.NewUserDeleteService, handler.NewUserHandler)

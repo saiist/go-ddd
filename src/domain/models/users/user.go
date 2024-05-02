@@ -1,25 +1,22 @@
 package users
 
-import (
-	"github.com/google/uuid"
-)
-
 type User struct {
 	UserId   UserId
 	UserName UserName
 }
 
 type UserCreateConfig struct {
+	Id   string
 	Name string
 }
 
 func NewUser(conf UserCreateConfig) (*User, error) {
-	un, err := NewUserName(conf.Name)
+	uid, err := NewUserId(conf.Id)
 	if err != nil {
 		return nil, err
 	}
 
-	uid, err := NewUserId(uuid.New().String())
+	un, err := NewUserName(conf.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -54,4 +51,8 @@ type IUserRepository interface {
 	FindById(id *UserId) (*User, error)
 	Save(user *User) error
 	Delete(user *User) error
+}
+
+type IUserFactory interface {
+	Create(name string) (*User, error)
 }

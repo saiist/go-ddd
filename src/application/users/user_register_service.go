@@ -5,22 +5,26 @@ import (
 )
 
 type UserRegisterService struct {
+	UserFactory    users.IUserFactory
 	UserRepository users.IUserRepository
 	UserService    *users.UserService
 }
 
 func NewUserRegisterService(
+	userFactory users.IUserFactory,
 	userRepository users.IUserRepository,
 	userService *users.UserService,
 ) *UserRegisterService {
 	return &UserRegisterService{
+		UserFactory:    userFactory,
 		UserRepository: userRepository,
 		UserService:    userService,
 	}
 }
 
 func (u *UserRegisterService) Handle(name string) error {
-	user, err := users.NewUser(users.UserCreateConfig{Name: name})
+
+	user, err := u.UserFactory.Create(name)
 	if err != nil {
 		return err
 	}
