@@ -29,12 +29,12 @@ func TestUserRegisterService_Handle(t *testing.T) {
 
 		var result *domain_models.User
 		for _, v := range users {
-			if v.UserName.Value == userName {
+			if string(v.UserName) == userName {
 				result = v
 			}
 		}
 
-		assert.Equal(t, userName, result.UserName.Value)
+		assert.Equal(t, userName, result.UserName)
 	})
 
 	// テストケース: ユーザー名が最大文字数の場合、成功するべき
@@ -48,12 +48,12 @@ func TestUserRegisterService_Handle(t *testing.T) {
 
 		var result *domain_models.User
 		for _, v := range users {
-			if v.UserName.Value == userName {
+			if string(v.UserName) == userName {
 				result = v
 			}
 		}
 
-		assert.Equal(t, userName, result.UserName.Value)
+		assert.Equal(t, userName, result.UserName)
 	})
 
 	// テストケース: ユーザー名が空の場合、エラーが返されるべき

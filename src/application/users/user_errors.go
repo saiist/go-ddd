@@ -2,7 +2,7 @@ package users
 
 import (
 	"fmt"
-	"go-ddd/src/domain/models/users"
+	domain_models "go-ddd/src/domain/models/users"
 )
 
 type UserAlreadyExistsError struct {
@@ -11,7 +11,7 @@ type UserAlreadyExistsError struct {
 
 func (e *UserAlreadyExistsError) Error() string {
 	return fmt.Sprintf("user already exists Id: %s, Name: %s",
-		e.User.UserId.Value, e.User.UserName.Value)
+		e.User.UserId, e.User.UserName)
 }
 
 type UserNotFoundError struct {
@@ -19,5 +19,5 @@ type UserNotFoundError struct {
 }
 
 func (e *UserNotFoundError) Error() string {
-	return fmt.Sprintf("user not found: %s", e.Id.Value)
+	return fmt.Sprintf("user not found: %s", e.Id)
 }

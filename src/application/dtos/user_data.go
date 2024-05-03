@@ -1,6 +1,6 @@
 package dtos
 
-import "go-ddd/src/domain/models/users"
+import domain_models "go-ddd/src/domain/models/users"
 
 type UserData struct {
 	Id   string `json:"id"`
@@ -9,7 +9,7 @@ type UserData struct {
 
 func NewUserData(source domain_models.User) *UserData {
 	return &UserData{
-		Id:   source.UserId.Value,
-		Name: source.UserName.Value,
+		Id:   string(source.UserId),
+		Name: string(source.UserName),
 	}
 }

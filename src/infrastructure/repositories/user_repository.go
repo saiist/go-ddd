@@ -20,7 +20,7 @@ func NewUserRepository(db *gorm.DB) domain_models.IUserRepository {
 
 func (r *UserRepository) FindByName(name *domain_models.UserName) (*domain_models.User, error) {
 	var model data_models.UserDataModel
-	result := r.db.Where("name = ?", name.Value).First(&model)
+	result := r.db.Where("name = ?", name).First(&model)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, nil
@@ -33,7 +33,7 @@ func (r *UserRepository) FindByName(name *domain_models.UserName) (*domain_model
 
 func (r *UserRepository) FindById(id *domain_models.UserId) (*domain_models.User, error) {
 	var model data_models.UserDataModel
-	result := r.db.Where("id = ?", id.Value).First(&model)
+	result := r.db.Where("id = ?", id).First(&model)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, nil

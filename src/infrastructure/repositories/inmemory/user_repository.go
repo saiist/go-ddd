@@ -24,7 +24,7 @@ func (r *UserRepository) FindByName(name *domain_models.UserName) (*domain_model
 	defer r.mu.RUnlock()
 
 	for _, b := range r.Store {
-		if b.UserName.Value == name.Value {
+		if &b.UserName == name {
 			// Create a deep copy of the user
 			copyUser := *b
 			return &copyUser, nil
@@ -38,7 +38,7 @@ func (r *UserRepository) FindById(id *domain_models.UserId) (*domain_models.User
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
-	result, ok := r.Store[id.Value]
+	result, ok := r.Store[string(*id)]
 	if !ok {
 		return nil, nil
 	}
@@ -65,7 +65,7 @@ func (r *UserRepository) Save(user *domain_models.User) error {
 	defer r.mu.Unlock()
 
 	copyUser := *user
-	r.Store[copyUser.UserId.Value] = &copyUser
+	r.Store[string(copyUser.UserId)] = &copyUser
 	return nil
 }
 
@@ -73,6 +73,6 @@ func (r *UserRepository) Delete(user *domain_models.User) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	delete(r.Store, user.UserId.Value)
+	delete(r.Store, string(user.UserId))
 	return nil
 }

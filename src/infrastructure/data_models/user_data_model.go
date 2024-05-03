@@ -29,8 +29,8 @@ func (d *UserDataModel) ToEntity() (*domain_models.User, error) {
 
 func (UserDataModel) ToDataModel(from *domain_models.User) *UserDataModel {
 	return &UserDataModel{
-		Id:   from.UserId.Value,
-		Name: from.UserName.Value,
+		Id:   string(from.UserId),
+		Name: string(from.UserName),
 	}
 }
 
