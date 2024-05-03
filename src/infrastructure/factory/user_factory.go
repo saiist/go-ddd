@@ -4,11 +4,9 @@ import (
 	domain_models "go-ddd/src/domain/models/users"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 type UserFactory struct {
-	db *gorm.DB
 }
 
 var _ domain_models.IUserFactory = &UserFactory{}

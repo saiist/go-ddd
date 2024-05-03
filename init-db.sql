@@ -4,5 +4,5 @@ DROP TABLE IF EXISTS users;
 -- テーブルの作成
 CREATE TABLE users (
     id UUID PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL UNIQUE
 );

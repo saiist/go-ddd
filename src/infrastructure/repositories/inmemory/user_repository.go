@@ -1,25 +1,25 @@
 package inmemory
 
 import (
-	"go-ddd/src/domain/models/users"
+	domain_models "go-ddd/src/domain/models/users"
 	"sync"
 )
 
 // this is a simple in-memory Store for users
-var store = make(map[string]*users.User)
+var store = make(map[string]*domain_models.User)
 
 type UserRepository struct {
-	Store map[string]*users.User
+	Store map[string]*domain_models.User
 	mu    sync.RWMutex
 }
 
-var _ users.IUserRepository = &UserRepository{}
+var _ domain_models.IUserRepository = &UserRepository{}
 
-func NewUserRepository() users.IUserRepository {
+func NewUserRepository() domain_models.IUserRepository {
 	return &UserRepository{Store: store}
 }
 
-func (r *UserRepository) FindByName(name *users.UserName) (*users.User, error) {
+func (r *UserRepository) FindByName(name *domain_models.UserName) (*domain_models.User, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
@@ -34,7 +34,7 @@ func (r *UserRepository) FindByName(name *users.UserName) (*users.User, error) {
 	return nil, nil
 }
 
-func (r *UserRepository) FindById(id *users.UserId) (*users.User, error) {
+func (r *UserRepository) FindById(id *domain_models.UserId) (*domain_models.User, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
@@ -47,11 +47,11 @@ func (r *UserRepository) FindById(id *users.UserId) (*users.User, error) {
 	return &copyUser, nil
 }
 
-func (r *UserRepository) FindAll() ([]*users.User, error) {
+func (r *UserRepository) FindAll() ([]*domain_models.User, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
-	var users []*users.User
+	var users []*domain_models.User
 	for _, b := range r.Store {
 		copyUser := *b
 		users = append(users, &copyUser)
@@ -60,7 +60,7 @@ func (r *UserRepository) FindAll() ([]*users.User, error) {
 	return users, nil
 }
 
-func (r *UserRepository) Save(user *users.User) error {
+func (r *UserRepository) Save(user *domain_models.User) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -69,7 +69,7 @@ func (r *UserRepository) Save(user *users.User) error {
 	return nil
 }
 
-func (r *UserRepository) Delete(user *users.User) error {
+func (r *UserRepository) Delete(user *domain_models.User) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 

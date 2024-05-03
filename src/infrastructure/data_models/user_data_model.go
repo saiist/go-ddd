@@ -2,7 +2,7 @@ package data_models
 
 import (
 	"fmt"
-	"go-ddd/src/domain/models/users"
+	domain_models "go-ddd/src/domain/models/users"
 
 	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
@@ -13,21 +13,21 @@ type UserDataModel struct {
 	Name string `validate:"required,min=3"`
 }
 
-func (d *UserDataModel) ToEntity() (*users.User, error) {
-	uid, err := users.NewUserId(d.Id)
+func (d *UserDataModel) ToEntity() (*domain_models.User, error) {
+	uid, err := domain_models.NewUserId(d.Id)
 	if err != nil {
 		return nil, err
 	}
 
-	un, err := users.NewUserName(d.Name)
+	un, err := domain_models.NewUserName(d.Name)
 	if err != nil {
 		return nil, err
 	}
 
-	return &users.User{UserId: *uid, UserName: *un}, nil
+	return &domain_models.User{UserId: *uid, UserName: *un}, nil
 }
 
-func (UserDataModel) ToDataModel(from *users.User) *UserDataModel {
+func (UserDataModel) ToDataModel(from *domain_models.User) *UserDataModel {
 	return &UserDataModel{
 		Id:   from.UserId.Value,
 		Name: from.UserName.Value,

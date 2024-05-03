@@ -1,19 +1,19 @@
 package users
 
 import (
-	"go-ddd/src/domain/models/users"
+	domain_models "go-ddd/src/domain/models/users"
 )
 
 type UserRegisterService struct {
-	UserFactory    users.IUserFactory
-	UserRepository users.IUserRepository
-	UserService    *users.UserService
+	UserFactory    domain_models.IUserFactory
+	UserRepository domain_models.IUserRepository
+	UserService    *domain_models.UserService
 }
 
 func NewUserRegisterService(
-	userFactory users.IUserFactory,
-	userRepository users.IUserRepository,
-	userService *users.UserService,
+	userFactory domain_models.IUserFactory,
+	userRepository domain_models.IUserRepository,
+	userService *domain_models.UserService,
 ) *UserRegisterService {
 	return &UserRegisterService{
 		UserFactory:    userFactory,
@@ -36,7 +36,7 @@ func (u *UserRegisterService) Handle(name string) error {
 	return u.UserRepository.Save(user)
 }
 
-func (u *UserRegisterService) checkUserExists(user *users.User) error {
+func (u *UserRegisterService) checkUserExists(user *domain_models.User) error {
 	exists, err := u.UserService.Exists(*user)
 	if err != nil {
 		return err

@@ -5,7 +5,7 @@ package di
 
 import (
 	app_service_users "go-ddd/src/application/users"
-	models_users "go-ddd/src/domain/models/users"
+	domain_models "go-ddd/src/domain/models/users"
 	"go-ddd/src/handler"
 	"go-ddd/src/infrastructure/factory"
 	"go-ddd/src/infrastructure/repositories"
@@ -19,7 +19,7 @@ import (
 var UserSet = wire.NewSet(
 	repositories.NewUserRepository,
 	factory.NewUserFactory,
-	models_users.NewUserService,
+	domain_models.NewUserService,
 	app_service_users.NewUserGetService,
 	app_service_users.NewUserRegisterService,
 	app_service_users.NewUserUpdateService,

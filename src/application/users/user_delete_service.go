@@ -6,11 +6,11 @@ import (
 )
 
 type UserDeleteService struct {
-	UserRepository users.IUserRepository
+	UserRepository domain_models.IUserRepository
 }
 
 func NewUserDeleteService(
-	userRepository users.IUserRepository,
+	userRepository domain_models.IUserRepository,
 ) *UserDeleteService {
 	return &UserDeleteService{
 		UserRepository: userRepository,
@@ -31,8 +31,8 @@ func (u *UserDeleteService) Handle(id string) error {
 	return u.UserRepository.Delete(user)
 }
 
-func (u *UserDeleteService) findUserById(id string) (*users.User, error) {
-	targetId, err := users.NewUserId(id)
+func (u *UserDeleteService) findUserById(id string) (*domain_models.User, error) {
+	targetId, err := domain_models.NewUserId(id)
 	if err != nil {
 		return nil, err
 	}

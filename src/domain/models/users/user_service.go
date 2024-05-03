@@ -1,4 +1,4 @@
-package users
+package domain_models
 
 type UserService struct {
 	UserRepository IUserRepository

@@ -6,7 +6,7 @@ import (
 )
 
 type UserAlreadyExistsError struct {
-	User users.User
+	User domain_models.User
 }
 
 func (e *UserAlreadyExistsError) Error() string {
@@ -15,7 +15,7 @@ func (e *UserAlreadyExistsError) Error() string {
 }
 
 type UserNotFoundError struct {
-	Id users.UserId
+	Id domain_models.UserId
 }
 
 func (e *UserNotFoundError) Error() string {

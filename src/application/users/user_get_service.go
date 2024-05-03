@@ -7,11 +7,11 @@ import (
 )
 
 type UserGetService struct {
-	UserRepository users.IUserRepository
+	UserRepository domain_models.IUserRepository
 }
 
 func NewUserGetService(
-	userRepository users.IUserRepository,
+	userRepository domain_models.IUserRepository,
 ) *UserGetService {
 	return &UserGetService{
 		UserRepository: userRepository,
@@ -45,8 +45,8 @@ func (u *UserGetService) GetAll() ([]*dtos.UserData, error) {
 	return result, nil
 }
 
-func (u *UserGetService) findUserById(id string) (*users.User, error) {
-	targetId, err := users.NewUserId(id)
+func (u *UserGetService) findUserById(id string) (*domain_models.User, error) {
+	targetId, err := domain_models.NewUserId(id)
 	if err != nil {
 		return nil, err
 	}

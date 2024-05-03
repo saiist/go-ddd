@@ -1,17 +1,17 @@
 package users
 
 import (
-	"go-ddd/src/domain/models/users"
+	domain_models "go-ddd/src/domain/models/users"
 )
 
 type UserUpdateService struct {
-	UserRepository users.IUserRepository
-	UserService    *users.UserService
+	UserRepository domain_models.IUserRepository
+	UserService    *domain_models.UserService
 }
 
 func NewUserUpdateService(
-	userRepository users.IUserRepository,
-	userService *users.UserService,
+	userRepository domain_models.IUserRepository,
+	userService *domain_models.UserService,
 ) *UserUpdateService {
 	return &UserUpdateService{
 		UserRepository: userRepository,
@@ -25,7 +25,7 @@ func (u *UserUpdateService) Update(id string, name string) error {
 		return err
 	}
 
-	conf := users.UserUpdateConfig{Name: &name}
+	conf := domain_models.UserUpdateConfig{Name: &name}
 	if err := user.Update(&conf); err != nil {
 		return err
 	}
@@ -37,8 +37,8 @@ func (u *UserUpdateService) Update(id string, name string) error {
 	return u.UserRepository.Save(user)
 }
 
-func (u *UserUpdateService) findUserById(id string) (*users.User, error) {
-	targetId, err := users.NewUserId(id)
+func (u *UserUpdateService) findUserById(id string) (*domain_models.User, error) {
+	targetId, err := domain_models.NewUserId(id)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (u *UserUpdateService) findUserById(id string) (*users.User, error) {
 	return user, nil
 }
 
-func (u *UserUpdateService) checkUserExists(user *users.User) error {
+func (u *UserUpdateService) checkUserExists(user *domain_models.User) error {
 	exists, err := u.UserService.Exists(*user)
 	if err != nil {
 		return err
